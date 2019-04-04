@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 
-namespace ArrayExtension.StringSort
+namespace TestEntities.StringSort
 {
     /// <summary>
     /// Comparer for strings that depends on the occurrences of certain symbol in strings.
     /// </summary>
-    public class StringAscByOccurrencesComparer : IComparer<string>
+    public class StringDescByOccurrencesComparer : IComparer<string>
     {
         /// <summary>
         /// Symbol for counting occurrences.
@@ -13,10 +13,10 @@ namespace ArrayExtension.StringSort
         private readonly char symbol;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="StringAscByOccurrencesComparer"/> class.
+        /// Initializes a new instance of the <see cref="StringDescByOccurrencesComparer"/> class.
         /// </summary>
         /// <param name="symbol">Symbol for counting occurrences.</param>
-        public StringAscByOccurrencesComparer(char symbol)
+        public StringDescByOccurrencesComparer(char symbol)
         {
             this.symbol = symbol;
         }
@@ -29,9 +29,24 @@ namespace ArrayExtension.StringSort
         /// <returns> Returns an integer that indicates their relative position in the sort order.</returns>
         public int Compare(string x, string y)
         {
+            if (x == null && y == null)
+            {
+                return 0;
+            }
+
+            if (y == null)
+            {
+                return -1;
+            }
+
+            if (x == null)
+            {
+                return 1;
+            }
+
             int occurrencesForX = x.GetCountOfSymbol(this.symbol);
             int occurrencesForY = y.GetCountOfSymbol(this.symbol);
-            if (occurrencesForX > occurrencesForY)
+            if (occurrencesForX < occurrencesForY)
             {
                 return 1;
             }

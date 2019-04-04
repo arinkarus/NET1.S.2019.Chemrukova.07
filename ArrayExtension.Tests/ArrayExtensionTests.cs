@@ -1,9 +1,10 @@
 ﻿using ArrayExtension.Filter;
-using ArrayExtension.Transform;
-using ArrayExtension.StringSort;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using TestEntities.Filter;
+using TestEntities.StringSort;
+using TestEntities.Transform;
 
 namespace ArrayExtension.Tests
 {
@@ -20,27 +21,27 @@ namespace ArrayExtension.Tests
                     arg2: new ContainsDigitPredicate(4), arg3: new int[] { 24, 42, -4444, -4, 4, -4 });
                 yield return new TestCaseData(arg1: new int[] { 20, 10, 145, 20 }, 
                     arg2: new ContainsDigitPredicate(2), arg3: new int[] { 20, 20 });
-                yield return new TestCaseData(arg1: new int[] { 1, 2, -5, 10, 15, 6, 7 }, arg2: new IfBiggerPredicate(-5),
+                yield return new TestCaseData(arg1: new int[] { 1, 2, -5, 10, 15, 6, 7 }, arg2: new BiggerNumberPredicate(-5),
                     arg3: new int[] { 1, 2, 10, 15, 6, 7 });
                 yield return new TestCaseData(arg1: new int[] { 10, 50, 51, 545, 55 },
-                    arg2: new IfBiggerPredicate(0),
+                    arg2: new BiggerNumberPredicate(0),
                     arg3: new int[] { 10, 50, 51, 545, 55 });
-                yield return new TestCaseData(arg1: new int[] { 0, 0, 0 }, arg2: new IsPalindromePredicate(),
+                yield return new TestCaseData(arg1: new int[] { 0, 0, 0 }, arg2: new NumberPalindromePredicate(),
                     arg3: new int[] { 0, 0, 0 });
-                yield return new TestCaseData(arg1: new int[] { 123, 3003, 12, 13, 14, 44144, 10101 }, arg2: new IsPalindromePredicate(),
+                yield return new TestCaseData(arg1: new int[] { 123, 3003, 12, 13, 14, 44144, 10101 }, arg2: new NumberPalindromePredicate(),
                     arg3: new int[] { 3003, 44144, 10101 });
-                yield return new TestCaseData(arg1: new int[] { 12, 7, 10, 0, 3, -8, -9 }, arg2: new IsEvenPredicate(),
+                yield return new TestCaseData(arg1: new int[] { 12, 7, 10, 0, 3, -8, -9 }, arg2: new EvenNumberPredicate(),
                     arg3: new int[] { 12, 10, 0, -8 });
             }
         }     
 
         [Test]
         public void Filter_ArrayIsNull_ThrowArgumentNullException() =>
-            Assert.Throws<ArgumentNullException>(() => ArrayExtension.Filter(null, new IsPalindromePredicate()));
+            Assert.Throws<ArgumentNullException>(() => ArrayExtension.Filter(null, new NumberPalindromePredicate()));
         
         [Test]
         public void Filter_ArrayIsEmpty_ThrowArgumentException() =>
-          Assert.Throws<ArgumentException>(() => new int[] { }.Filter(new IsPalindromePredicate()));
+          Assert.Throws<ArgumentException>(() => new int[] { }.Filter(new NumberPalindromePredicate()));
 
         [Test]
         public void Filter_PredicateIsNull__ThrowArgumentNullException() =>
@@ -126,14 +127,16 @@ namespace ArrayExtension.Tests
         public void Sort_ArrayIsEmpty_ThrowArgumentException() =>
             Assert.Throws<ArgumentException>(() => ArrayExtension.Sort(new string[] { }, new StringAscByLengthComparer()));
         
-        [TestCase(new string[] { "test", "test1010", "1", "{2}"}, new string[] { "1", "{2}", "test", "test1010" })]
-        [TestCase(new string[] { "one", "", "hello", "e"}, new string[] { "", "e", "one", "hello" })]
+        [TestCase(new string[] { "sort", "22", null, "1" }, new string[] { null, "1", "22", "sort" })]
+        [TestCase(new string[] { "test", "test1010", "1", "{2}" }, new string[] { "1", "{2}", "test", "test1010" })]
+        [TestCase(new string[] { "one", "", "hello", "e" }, new string[] { "", "e", "one", "hello" })]
         public void Sort_ArrayAndAscByLengthComparer_ReturnSortedArrayOfStrings(string[] array, string[] expected)
         {
             ArrayExtension.Sort(array, new StringAscByLengthComparer());
             CollectionAssert.AreEqual(array, expected);
         }
 
+        [TestCase(new string[] { "1", "111", null, "4444", "hello", null }, new string[] { "hello", "4444", "111", "1", null, null })]
         [TestCase(new string[] { "let", "0", "1", "testtest" }, new string[] { "testtest", "let", "0", "1" })]
         [TestCase(new string[] { "someString", "level", "two", "some some some.", "let"},
             new string[] { "some some some.", "someString", "level", "two", "let" })]
@@ -143,6 +146,7 @@ namespace ArrayExtension.Tests
             CollectionAssert.AreEqual(array, expected);
         }
 
+        [TestCase(new string[] { "one", "ooo", null }, 'o', new string[] { null, "one", "ooo" })]
         [TestCase(new string[] { " ", "something", "test by test", "hello" }, 't',
             new string[] {" ", "hello", "something", "test by test" })]
         [TestCase(new string[] { "absbsba", "", "hhaaahahh", "halo"}, 'a', new string[] { "", "halo", "absbsba", "hhaaahahh" })]
@@ -152,6 +156,7 @@ namespace ArrayExtension.Tests
             CollectionAssert.AreEqual(array, expected);
         }
 
+        [TestCase(new string[] { null, "one", "ooo", null }, 'o', new string[] { "ooo", "one", null, null })]
         [TestCase(new string[] { "temp", "test", "eeee", "e", "123"}, 'e', new string[] { "eeee", "temp", "test", "e", "123" })]
         [TestCase(new string[] { "xxx", "abc", "abcde", "xyzzyxxyzz", "yes"}, 'x', 
             new string[] { "xxx", "xyzzyxxyzz", "abc", "abcde", "yes"})]

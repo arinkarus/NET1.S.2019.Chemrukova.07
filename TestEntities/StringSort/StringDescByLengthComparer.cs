@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace ArrayExtension.StringSort
+namespace TestEntities.StringSort
 {
     /// <summary>
     /// Comparer for strings that is based on string lengths.
@@ -16,6 +16,21 @@ namespace ArrayExtension.StringSort
         /// <returns></returns>
         public int Compare(string x, string y)
         {
+            if (x == null && y == null)
+            {
+                return 0;
+            }
+
+            if (y == null)
+            {
+                return -1;
+            }
+
+            if (x == null)
+            {
+                return 1;
+            }
+
             if (x.Length < y.Length)
             {
                 return 1;

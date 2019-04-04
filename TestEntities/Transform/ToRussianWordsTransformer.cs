@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace ArrayExtension.Transform
+namespace TestEntities.Transform
 {
     /// <summary>
     /// Transforms double number to russian words.

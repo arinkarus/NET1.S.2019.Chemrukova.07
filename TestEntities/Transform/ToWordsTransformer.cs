@@ -1,10 +1,11 @@
-﻿using System;
+﻿using ArrayExtension.Transform;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ArrayExtension.Transform
+namespace TestEntities.Transform
 {
     /// <summary>
     /// Implements ITransformer interface.

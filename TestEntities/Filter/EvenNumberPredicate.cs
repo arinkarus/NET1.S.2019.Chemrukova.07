@@ -1,15 +1,16 @@
-﻿using System;
+﻿using ArrayExtension.Filter;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ArrayExtension.Filter
+namespace TestEntities.Filter
 {
     /// <summary>
     /// Predicate that tells if number is even.
     /// </summary>
-    public class IsEvenPredicate : IPredicate
+    public class EvenNumberPredicate : IPredicate
     {
         /// <summary>
         /// Check if number is even.

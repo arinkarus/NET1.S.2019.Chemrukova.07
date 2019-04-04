@@ -1,9 +1,11 @@
-﻿namespace ArrayExtension.Filter
+﻿using ArrayExtension.Filter;
+
+namespace TestEntities.Filter
 {
     /// <summary>
     /// Predicate that tells if number is palindrome.
     /// </summary>
-    public class IsPalindromePredicate : IPredicate
+    public class NumberPalindromePredicate : IPredicate
     {
         /// <summary>
         /// Returns true if number is palindrome.

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ArrayExtension.StringSort
+namespace TestEntities.StringSort
 {
     /// <summary>
     /// Provides useful helper methods for working with strings.

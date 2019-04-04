@@ -1,11 +1,7 @@
-﻿using ArrayExtension.Transform;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text;
+using TestEntities.Transform;
 
-namespace ArrayExtension
+namespace TestEntities
 {
     /// <summary>
     /// Provides methods to work with double numbers.

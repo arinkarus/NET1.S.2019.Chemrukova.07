@@ -42,24 +42,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ArrayExtension.cs" />
-    <Compile Include="DoubleExtension.cs" />
-    <Compile Include="Filter\ContainsDigitPredicate.cs" />
-    <Compile Include="Filter\IfBiggerPredicate.cs" />
-    <Compile Include="Filter\IPredicate.cs" />
-    <Compile Include="Filter\IsEvenPredicate.cs" />
-    <Compile Include="Filter\IsPalindromePredicate.cs" />
+    <Compile Include="Interfaces\IPredicate.cs" />
+    <Compile Include="Interfaces\ITransformer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="StringSort\StringAscByLengthComparer.cs" />
-    <Compile Include="StringSort\StringAscByOccurrencesComparer.cs" />
-    <Compile Include="StringSort\StringDescByLengthComparer.cs" />
-    <Compile Include="StringSort\StringDescByOccurrencesComparer.cs" />
-    <Compile Include="StringSort\StringExtension.cs" />
-    <Compile Include="Transform\Float64.cs" />
-    <Compile Include="Transform\ITransformer.cs" />
-    <Compile Include="Transform\ToBinaryRepresentationTransformer.cs" />
-    <Compile Include="Transform\ToEnglishWordsTransformer.cs" />
-    <Compile Include="Transform\ToRussianWordsTransformer.cs" />
-    <Compile Include="Transform\ToWordsTransformer.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

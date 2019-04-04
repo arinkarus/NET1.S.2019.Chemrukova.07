@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ArrayExtension.Transform
+namespace TestEntities.Transform
 {
     /// <summary>
     /// Instance of this struct holds double value and long 

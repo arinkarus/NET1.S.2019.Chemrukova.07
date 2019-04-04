@@ -1,9 +1,11 @@
-﻿namespace ArrayExtension.Filter
+﻿using ArrayExtension.Filter;
+
+namespace TestEntities.Filter
 {
     /// <summary>
     /// Predicate that tells if number is bigger that another number. 
     /// </summary>
-    public class IfBiggerPredicate : IPredicate
+    public class BiggerNumberPredicate : IPredicate
     {
         /// <summary>
         /// Number that will be used for comparison.
@@ -11,10 +13,10 @@
         private readonly int numberToCompare;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="IfBiggerPredicate"/> class.
+        /// Initializes a new instance of the <see cref="BiggerNumberPredicate"/> class.
         /// </summary>
         /// <param name="numberToCompare">Number to compare.</param>
-        public IfBiggerPredicate(int numberToCompare)
+        public BiggerNumberPredicate(int numberToCompare)
         {
             this.numberToCompare = numberToCompare;
         }

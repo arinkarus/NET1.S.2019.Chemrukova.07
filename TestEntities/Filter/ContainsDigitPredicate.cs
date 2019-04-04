@@ -1,6 +1,7 @@
-﻿using System;
+﻿using ArrayExtension.Filter;
+using System;
 
-namespace ArrayExtension.Filter
+namespace TestEntities.Filter
 {
     /// <summary>
     /// Predicate that tells if number contains certain digit.
@@ -43,7 +44,7 @@ namespace ArrayExtension.Filter
 
         private void CheckIfDigit(int digit)
         {
-            if (this.digit < 0 || this.digit > 9)
+            if (digit < 0 || digit > 9)
             {
                 throw new ArgumentException($"{nameof(digit)} isn't a digit.");
             }
