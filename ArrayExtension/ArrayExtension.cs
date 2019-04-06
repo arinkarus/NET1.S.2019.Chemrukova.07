@@ -123,5 +123,12 @@ namespace ArrayExtension
                 throw new ArgumentNullException($"{nameof(obj)} can't be null.");
             }
         }
+
+        private static void SwapArrays(ref int[] a, ref int[] b)
+        {
+            int[] temp = a;
+            a = b;
+            b = temp;
+        }
     }
 }
