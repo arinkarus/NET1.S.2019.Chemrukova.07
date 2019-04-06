@@ -46,6 +46,13 @@
     <Compile Include="Filter\BiggerNumberPredicate.cs" />
     <Compile Include="Filter\EvenNumberPredicate.cs" />
     <Compile Include="Filter\NumberPalindromePredicate.cs" />
+    <Compile Include="JaggedArraySort\CalculationHelper.cs" />
+    <Compile Include="JaggedArraySort\LinesAscByMaxElementComparer.cs" />
+    <Compile Include="JaggedArraySort\LinesAscByMinElementComparer.cs" />
+    <Compile Include="JaggedArraySort\LinesAscBySumComparer.cs.cs" />
+    <Compile Include="JaggedArraySort\LinesDescByMaxElementComparer.cs" />
+    <Compile Include="JaggedArraySort\LinesDescByMinElementComparer.cs" />
+    <Compile Include="JaggedArraySort\LinesDescBySumComparer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StringSort\StringAscByLengthComparer.cs" />
     <Compile Include="StringSort\StringAscByOccurrencesComparer.cs" />

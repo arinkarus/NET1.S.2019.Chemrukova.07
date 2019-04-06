@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using TestEntities.Filter;
 using TestEntities.StringSort;
 using TestEntities.Transform;
+using TestEntities.JaggedArraySort;
 
 namespace ArrayExtension.Tests
 {
@@ -16,10 +17,10 @@ namespace ArrayExtension.Tests
         {
             get
             {
-                yield return new TestCaseData(arg1: new int[] { 1 } , arg2: new ContainsDigitPredicate(2), arg3: new int[] { });
+                yield return new TestCaseData(arg1: new int[] { 1 }, arg2: new ContainsDigitPredicate(2), arg3: new int[] { });
                 yield return new TestCaseData(arg1: new int[] { 24, 42, -4444, -4, 4, -4, 22, -788 },
                     arg2: new ContainsDigitPredicate(4), arg3: new int[] { 24, 42, -4444, -4, 4, -4 });
-                yield return new TestCaseData(arg1: new int[] { 20, 10, 145, 20 }, 
+                yield return new TestCaseData(arg1: new int[] { 20, 10, 145, 20 },
                     arg2: new ContainsDigitPredicate(2), arg3: new int[] { 20, 20 });
                 yield return new TestCaseData(arg1: new int[] { 1, 2, -5, 10, 15, 6, 7 }, arg2: new BiggerNumberPredicate(-5),
                     arg3: new int[] { 1, 2, 10, 15, 6, 7 });
@@ -33,12 +34,12 @@ namespace ArrayExtension.Tests
                 yield return new TestCaseData(arg1: new int[] { 12, 7, 10, 0, 3, -8, -9 }, arg2: new EvenNumberPredicate(),
                     arg3: new int[] { 12, 10, 0, -8 });
             }
-        }     
+        }
 
         [Test]
         public void Filter_ArrayIsNull_ThrowArgumentNullException() =>
             Assert.Throws<ArgumentNullException>(() => ArrayExtension.Filter(null, new NumberPalindromePredicate()));
-        
+
         [Test]
         public void Filter_ArrayIsEmpty_ThrowArgumentException() =>
           Assert.Throws<ArgumentException>(() => new int[] { }.Filter(new NumberPalindromePredicate()));
@@ -104,8 +105,8 @@ namespace ArrayExtension.Tests
             { "one exponenta minus one zero", "three point two" })]
         [TestCase(new double[] { 22.02, double.NaN, 0 }, ExpectedResult = new string[]
             { "two two point zero two", "Not a number", "zero" })]
-        [TestCase(new double[] { 330, double.PositiveInfinity, double.NegativeInfinity}, ExpectedResult =
-            new string[] {"three three zero", "Positive Infinity", "Negative Infinity"})]
+        [TestCase(new double[] { 330, double.PositiveInfinity, double.NegativeInfinity }, ExpectedResult =
+            new string[] { "three three zero", "Positive Infinity", "Negative Infinity" })]
         public string[] Transform_ArrayToEnglishWords_ReturnArrayOfStrings(double[] array)
         {
             return array.Transform(new ToEnglishWordsTransformer());
@@ -126,7 +127,7 @@ namespace ArrayExtension.Tests
         [Test]
         public void Sort_ArrayIsEmpty_ThrowArgumentException() =>
             Assert.Throws<ArgumentException>(() => ArrayExtension.Sort(new string[] { }, new StringAscByLengthComparer()));
-        
+
         [TestCase(new string[] { "sort", "22", null, "1" }, new string[] { null, "1", "22", "sort" })]
         [TestCase(new string[] { "test", "test1010", "1", "{2}" }, new string[] { "1", "{2}", "test", "test1010" })]
         [TestCase(new string[] { "one", "", "hello", "e" }, new string[] { "", "e", "one", "hello" })]
@@ -138,7 +139,7 @@ namespace ArrayExtension.Tests
 
         [TestCase(new string[] { "1", "111", null, "4444", "hello", null }, new string[] { "hello", "4444", "111", "1", null, null })]
         [TestCase(new string[] { "let", "0", "1", "testtest" }, new string[] { "testtest", "let", "0", "1" })]
-        [TestCase(new string[] { "someString", "level", "two", "some some some.", "let"},
+        [TestCase(new string[] { "someString", "level", "two", "some some some.", "let" },
             new string[] { "some some some.", "someString", "level", "two", "let" })]
         public void Sort_ArrayAndDescByLengthComparer_ReturnSortedArrayOfStrings(string[] array, string[] expected)
         {
@@ -148,8 +149,8 @@ namespace ArrayExtension.Tests
 
         [TestCase(new string[] { "one", "ooo", null }, 'o', new string[] { null, "one", "ooo" })]
         [TestCase(new string[] { " ", "something", "test by test", "hello" }, 't',
-            new string[] {" ", "hello", "something", "test by test" })]
-        [TestCase(new string[] { "absbsba", "", "hhaaahahh", "halo"}, 'a', new string[] { "", "halo", "absbsba", "hhaaahahh" })]
+            new string[] { " ", "hello", "something", "test by test" })]
+        [TestCase(new string[] { "absbsba", "", "hhaaahahh", "halo" }, 'a', new string[] { "", "halo", "absbsba", "hhaaahahh" })]
         public void Sort_ArrayAndAscBySymbolOccurrences_ReturnSortedArrayOfStrings(string[] array, char symbol, string[] expected)
         {
             ArrayExtension.Sort(array, new StringAscByOccurrencesComparer(symbol));
@@ -157,13 +158,176 @@ namespace ArrayExtension.Tests
         }
 
         [TestCase(new string[] { null, "one", "ooo", null }, 'o', new string[] { "ooo", "one", null, null })]
-        [TestCase(new string[] { "temp", "test", "eeee", "e", "123"}, 'e', new string[] { "eeee", "temp", "test", "e", "123" })]
-        [TestCase(new string[] { "xxx", "abc", "abcde", "xyzzyxxyzz", "yes"}, 'x', 
-            new string[] { "xxx", "xyzzyxxyzz", "abc", "abcde", "yes"})]
+        [TestCase(new string[] { "temp", "test", "eeee", "e", "123" }, 'e', new string[] { "eeee", "temp", "test", "e", "123" })]
+        [TestCase(new string[] { "xxx", "abc", "abcde", "xyzzyxxyzz", "yes" }, 'x',
+            new string[] { "xxx", "xyzzyxxyzz", "abc", "abcde", "yes" })]
         public void Sort_ArrayAndDescBySymbolOccurences_ReturnSortedArrayOfStrings(string[] array, char symbol, string[] expected)
         {
             ArrayExtension.Sort(array, new StringDescByOccurrencesComparer(symbol));
             CollectionAssert.AreEqual(array, expected);
+        }
+
+        #endregion
+
+        #region Sort jagged array
+
+
+        [Test]
+        public void SortJaggedArray_ArrayIsNull_ThrowArgumentNullException() =>
+            Assert.Throws<ArgumentNullException>(() => ArrayExtension.Sort(null, new LinesDescBySumComparer()));
+
+        [Test]
+        public void SortJaggedArray_ArrayIsEmpty_ThrowArgumentException() =>
+            Assert.Throws<ArgumentException>(() => ArrayExtension.Sort(new int[][] { }, new LinesDescBySumComparer()));
+
+        [Test]
+        public void SortJaggedArray_ComparerIsNull__ThrowArgumentNullException() =>
+            Assert.Throws<ArgumentNullException>(() => ArrayExtension.Sort(new int[][] { new int[] { 1, 2 } }, null));
+
+        [Test]
+        public void SortJaggedArray_LinesDescBySumComparer()
+        {
+            int[][] array = new int[][]
+            {
+                new int[] {100},
+                new int[] { 1050, 10, -1050 },
+                null,
+                new int[] { 1, 2, 3 },
+                null
+            };
+            int[][] expectedArray = new int[][]
+            {
+                new int[] { 100 },
+                new int[] { 1050, 10, -1050 },
+                new int[] { 1, 2, 3 },
+                null,
+                null
+            };
+            array.Sort(new LinesDescBySumComparer());
+            CollectionAssert.AreEqual(expectedArray, array);
+        }
+
+        [Test]
+        public void SortJaggedArray_LinesAscBySumComparer()
+        {
+            int[][] array = new int[][]
+            {
+                new int[] { 255, 20, 555 },
+                new int[] { -200, -400, 0 },
+                null,
+                new int[] { 1, 2, 3, 4, 4 },
+                null,
+                new int[] {0, 0, 0},
+            };
+            int[][] expectedArray = new int[][]
+            {
+                null,
+                null,
+                new int[] { -200, -400, 0 },
+                new int[] {0, 0, 0},
+                new int[] { 1, 2, 3, 4, 4 },
+                new int[] { 255, 20, 555 },
+            };
+            array.Sort(new LinesAscBySumComparer());
+            CollectionAssert.AreEqual(expectedArray, array);
+        }
+        
+        [Test]
+        public void SortJaggedArray_LinesAscByMaxElementComparer()
+        {
+            int[][] array = new int[][]
+            {
+                new int[] { 255, 20, 555 },
+                new int[] { -200, -400, 0 },
+                null,
+                new int[] { 1, 2, 3, 4, 4 },
+                null,
+                new int[] {0, 0, 0},
+            };
+            int[][] expectedArray = new int[][]
+            {
+                null,
+                null,
+                new int[] { -200, -400, 0 },
+                new int[] { 0, 0, 0},
+                new int[] { 1, 2, 3, 4, 4},
+                new int[] { 255, 20, 555 }
+            };
+            array.Sort(new LinesAscByMaxElementComparer());
+            CollectionAssert.AreEqual(expectedArray, array);
+        }
+
+        [Test]
+        public void SortJaggedArray_LinesDescByMaxElementComparer()
+        {
+            int[][] array = new int[][]
+            {
+                new int[] { 255, 20, 555 },
+                new int[] { -200, -400, 0 },
+                null,
+                new int[] { 1, 2, 3, 4, 4 },
+                null,
+                new int[] {0, 0, 0},
+            };
+            int[][] expectedArray = new int[][]
+            {
+                new int[] { 255, 20, 555 },
+                new int[] { 1, 2, 3, 4, 4},
+                new int[] { -200, -400, 0 },
+                new int[] { 0, 0, 0},
+                null,
+                null
+            };
+            array.Sort(new LinesDescByMaxElementComparer());
+            CollectionAssert.AreEqual(expectedArray, array);
+        }
+
+        [Test]
+        public void SortJaggedArray_LinesAscByMinElementComparer()
+        {
+            int[][] array = new int[][]
+            {
+                null,
+                new int[] { 200, 80, 1 },
+                new int[] { 250, 10, 10, -8 },
+                new int[] { 1, 2, 3, 4, 5 },
+                new int[] { 0, 0, 1, 12 },
+                null
+            };
+            int[][] expectedArray = new int[][]
+            {
+                null,
+                null,
+                new int[] { 250, 10, 10, -8 },
+                new int[] { 0, 0, 1, 12 },
+                new int[] { 200, 80, 1 },
+                new int[] { 1, 2, 3, 4, 5 },
+            };
+            array.Sort(new LinesAscByMinElementComparer());
+            CollectionAssert.AreEqual(expectedArray, array);
+        }
+
+        [Test]
+        public void SortJaggedArray_LinesDescByMinElementComparer()
+        {
+            int[][] array = new int[][]
+            {
+                null,
+                new int[] { -5, -55, 0 },
+                new int[] { 333, 22, 100000 },
+                new int[] { 0, 1, 0 },
+                null
+            };
+            int[][] expectedArray = new int[][]
+            {
+                new int[] { 333, 22, 100000 },
+                new int[] { 0, 1, 0 },
+                new int[] { -5, -55, 0 },
+                null,
+                null
+            };
+            array.Sort(new LinesDescByMinElementComparer());
+            CollectionAssert.AreEqual(expectedArray, array);
         }
 
         #endregion
