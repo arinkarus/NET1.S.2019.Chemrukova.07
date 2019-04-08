@@ -203,8 +203,8 @@ namespace ArrayExtension.Tests
                 null,
                 null
             };
-            array.Sort(new LinesDescBySumComparer());
-            CollectionAssert.AreEqual(expectedArray, array);
+            int[][] sorted = array.Sort(new LinesDescBySumComparer());
+            CollectionAssert.AreEqual(expectedArray, sorted);
         }
 
         [Test]
@@ -228,8 +228,8 @@ namespace ArrayExtension.Tests
                 new int[] { 1, 2, 3, 4, 4 },
                 new int[] { 255, 20, 555 },
             };
-            array.Sort(new LinesAscBySumComparer());
-            CollectionAssert.AreEqual(expectedArray, array);
+            int[][] sortedArray = array.Sort(new LinesAscBySumComparer());
+            CollectionAssert.AreEqual(expectedArray, sortedArray);
         }
         
         [Test]
@@ -253,8 +253,8 @@ namespace ArrayExtension.Tests
                 new int[] { 1, 2, 3, 4, 4},
                 new int[] { 255, 20, 555 }
             };
-            array.Sort(new LinesAscByMaxElementComparer());
-            CollectionAssert.AreEqual(expectedArray, array);
+            int[][] sortedArray =  array.Sort(new LinesAscByMaxElementComparer());
+            CollectionAssert.AreEqual(expectedArray, sortedArray);
         }
 
         [Test]
@@ -278,8 +278,8 @@ namespace ArrayExtension.Tests
                 null,
                 null
             };
-            array.Sort(new LinesDescByMaxElementComparer());
-            CollectionAssert.AreEqual(expectedArray, array);
+            int[][] sortedArray = array.Sort(new LinesDescByMaxElementComparer());
+            CollectionAssert.AreEqual(expectedArray, sortedArray);
         }
 
         [Test]
@@ -303,8 +303,7 @@ namespace ArrayExtension.Tests
                 new int[] { 200, 80, 1 },
                 new int[] { 1, 2, 3, 4, 5 },
             };
-            array.Sort(new LinesAscByMinElementComparer());
-            CollectionAssert.AreEqual(expectedArray, array);
+            CollectionAssert.AreEqual(expectedArray, array.Sort(new LinesAscByMinElementComparer()));
         }
 
         [Test]
@@ -326,8 +325,8 @@ namespace ArrayExtension.Tests
                 null,
                 null
             };
-            array.Sort(new LinesDescByMinElementComparer());
-            CollectionAssert.AreEqual(expectedArray, array);
+            int[][] sortedArray = array.Sort(new LinesDescByMinElementComparer());
+            CollectionAssert.AreEqual(expectedArray, sortedArray);
         }
 
         #endregion

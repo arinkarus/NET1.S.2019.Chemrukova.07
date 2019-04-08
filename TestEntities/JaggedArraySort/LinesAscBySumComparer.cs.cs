@@ -33,19 +33,7 @@ namespace TestEntities.JaggedArraySort
                 return 0;
             }
 
-            int sumOfFirstArray = x.Sum();
-            int sumOfSecondArray = y.Sum();
-            if (sumOfFirstArray > sumOfSecondArray)
-            {
-                return 1;
-            }
-
-            if (sumOfFirstArray == sumOfSecondArray)
-            {
-                return 0;
-            }
-
-            return -1;
+            return x.Sum() - y.Sum();
         }
     }
 }

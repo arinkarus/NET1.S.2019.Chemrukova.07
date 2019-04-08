@@ -17,22 +17,24 @@ namespace ArrayExtension
         /// <param name="linesComparer">Comparer for line sorts.</param>
         /// <exception cref="ArgumentNullException">Thrown when array is null.</exception>
         /// <exception cref="ArgumentException">Thrown when array is empty.</exception>
-        public static void Sort(this int[][] jaggedArray, IComparer<int[]> linesComparer)
+        public static int[][] Sort(this int[][] jaggedArray, IComparer<int[]> linesComparer)
         {
             ValidateArray(jaggedArray);
             CheckOnNull(linesComparer);
-            for (int i = 0; i < jaggedArray.Length; i++)
+            int[][] arrayToSort = (int[][])jaggedArray.Clone();
+            for (int i = 0; i < arrayToSort.Length; i++)
             {
-                for (int j = 0; j < jaggedArray.Length - i - 1; j++)
+                for (int j = 0; j < arrayToSort.Length - i - 1; j++)
                 {
-                    if (linesComparer.Compare(jaggedArray[j], jaggedArray[j + 1]) > 0)
+                    if (linesComparer.Compare(arrayToSort[j], arrayToSort[j + 1]) > 0)
                     {
-                        int[] temp = jaggedArray[j];
-                        jaggedArray[j] = jaggedArray[j + 1];
-                        jaggedArray[j + 1] = temp;
+                        int[] temp = arrayToSort[j];
+                        arrayToSort[j] = arrayToSort[j + 1];
+                        arrayToSort[j + 1] = temp;
                     }
                 }
             }
+            return arrayToSort;
         }
 
         /// <summary>

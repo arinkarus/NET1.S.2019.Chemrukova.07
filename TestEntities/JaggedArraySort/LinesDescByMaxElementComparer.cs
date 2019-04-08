@@ -36,19 +36,7 @@ namespace TestEntities.JaggedArraySort
                 return 0;
             }
 
-            int maxElementOfFirst = x.GetMax();
-            int maxElementOfSecond = y.GetMax();
-            if (maxElementOfFirst < maxElementOfSecond)
-            {
-                return 1;
-            }
-
-            if (maxElementOfFirst == maxElementOfSecond)
-            {
-                return 0;
-            }
-
-            return -1;
+            return y.GetMax() - x.GetMax();
         }
     }
 }

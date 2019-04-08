@@ -36,19 +36,7 @@ namespace TestEntities.JaggedArraySort
                 return 0;
             }
 
-            int minElementFromFirst = x.GetMin();
-            int minElementFromSecond = y.GetMin();
-            if (minElementFromFirst < minElementFromSecond)
-            {
-                return 1;
-            }
-
-            if (minElementFromFirst == minElementFromSecond)
-            {
-                return 0;
-            }
-
-            return -1;
+            return y.GetMin() - x.GetMin();
         }
     }
 }
