@@ -10,7 +10,7 @@ namespace TestEntities.Transform
     /// <summary>
     /// Implements ITransformer interface.
     /// </summary>
-    public abstract class ToWordsTransformer : ITransformer
+    public abstract class ToWordsTransformer : ITransformer<double, string>
     {
         /// <summary>
         /// Transforms number to some language representation.

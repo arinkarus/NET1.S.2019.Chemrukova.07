@@ -3,13 +3,13 @@
     /// <summary>
     /// Predicate interface.
     /// </summary>
-    public interface IPredicate
+    public interface IPredicate<T>
     {
         /// <summary>
-        /// Returns true if number much some condition.
+        /// Tells if value matches some condition. 
         /// </summary>
-        /// <param name="number">Number that will be checked.</param>
-        /// <returns></returns>
-        bool IsMatch(int number);
+        /// <param name="value">Value to check.</param>
+        /// <returns>True if value matches condition otherwise - false.</returns>
+        bool IsMatch(T value);
     }
 }

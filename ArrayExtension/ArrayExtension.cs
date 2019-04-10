@@ -11,33 +11,6 @@ namespace ArrayExtension
     public static class ArrayExtension
     {
         /// <summary>
-        /// Sorts jagged array depending on comparer.
-        /// </summary>
-        /// <param name="jaggedArray">Given jagged array.</param>
-        /// <param name="linesComparer">Comparer for line sorts.</param>
-        /// <exception cref="ArgumentNullException">Thrown when array is null.</exception>
-        /// <exception cref="ArgumentException">Thrown when array is empty.</exception>
-        public static int[][] Sort(this int[][] jaggedArray, IComparer<int[]> linesComparer)
-        {
-            ValidateArray(jaggedArray);
-            CheckOnNull(linesComparer);
-            int[][] arrayToSort = (int[][])jaggedArray.Clone();
-            for (int i = 0; i < arrayToSort.Length; i++)
-            {
-                for (int j = 0; j < arrayToSort.Length - i - 1; j++)
-                {
-                    if (linesComparer.Compare(arrayToSort[j], arrayToSort[j + 1]) > 0)
-                    {
-                        int[] temp = arrayToSort[j];
-                        arrayToSort[j] = arrayToSort[j + 1];
-                        arrayToSort[j + 1] = temp;
-                    }
-                }
-            }
-            return arrayToSort;
-        }
-
-        /// <summary>
         /// Filters array by some predicate.
         /// </summary>
         /// <param name="array">Given array.</param>
@@ -47,11 +20,11 @@ namespace ArrayExtension
         /// or array is null.
         /// </exception>
         /// <exception cref="ArgumentException">Thrown when array is empty.</exception>
-        public static int[] Filter(this int[] array, IPredicate predicate)
+        public static T[] Filter<T>(this T[] array, IPredicate<T> predicate)
         {
             ValidateArray(array);
             CheckOnNull(predicate);
-            var filtered = new List<int>();
+            var filtered = new List<T>();
             for (int i = 0;  i < array.Length; i++)
             {
                 if (predicate.IsMatch(array[i]))
@@ -73,11 +46,11 @@ namespace ArrayExtension
         /// or array is null.
         /// </exception>
         /// <exception cref="ArgumentException">Thrown when array is empty.</exception>
-        public static string[] Transform(this double[] array, ITransformer transformer)
+        public static TDest[] Transform<TSource, TDest>(this TSource[] array, ITransformer<TSource, TDest> transformer)
         {
             ValidateArray(array);
             CheckOnNull(transformer);
-            var stringRepresentations = new string[array.Length];
+            var stringRepresentations = new TDest[array.Length];
             for (int i = 0; i < array.Length; i++)
             {
                 stringRepresentations[i] = transformer.Transform(array[i]);
@@ -95,11 +68,14 @@ namespace ArrayExtension
         /// or array is null.
         /// </exception>
         /// <exception cref="ArgumentException">Thrown when array is empty.</exception>
-        public static void Sort(this string[] array, IComparer<string> comparer)
+        public static T[] SortBy<T>(this T[] array, IComparer<T> comparer)
         {
             ValidateArray(array);
             CheckOnNull(comparer);
-            Array.Sort(array, comparer);
+            var arrayToSort = new T[array.Length];
+            array.CopyTo(arrayToSort, 0);
+            Array.Sort(arrayToSort, comparer);
+            return arrayToSort;
         }
 
         /// <summary>

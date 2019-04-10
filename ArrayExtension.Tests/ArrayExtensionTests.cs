@@ -38,7 +38,7 @@ namespace ArrayExtension.Tests
 
         [Test]
         public void Filter_ArrayIsNull_ThrowArgumentNullException() =>
-            Assert.Throws<ArgumentNullException>(() => ArrayExtension.Filter(null, new NumberPalindromePredicate()));
+            Assert.Throws<ArgumentNullException>(() => ArrayExtension.Filter<int>(null, new NumberPalindromePredicate()));
 
         [Test]
         public void Filter_ArrayIsEmpty_ThrowArgumentException() =>
@@ -49,7 +49,7 @@ namespace ArrayExtension.Tests
             Assert.Throws<ArgumentNullException>(() => new int[] { 2, 5 }.Filter(null));
 
         [Test, TestCaseSource(nameof(FilterTestCases))]
-        public void Filter_ConreteArrayAndPredicate_ReturnFilteredArray(int[] array, IPredicate predicate, int[] expected)
+        public void Filter_ConreteArrayAndPredicate_ReturnFilteredArray(int[] array, IPredicate<int> predicate, int[] expected)
         {
             CollectionAssert.AreEqual(array.Filter(predicate), expected);
         }
@@ -65,11 +65,11 @@ namespace ArrayExtension.Tests
 
         [Test]
         public void Transform_TransformerIsNull_ThrowArgumentNullException() =>
-            Assert.Throws<ArgumentNullException>(() => new double[] { 1.1 }.Transform(null));
+            Assert.Throws<ArgumentNullException>(() => new double[] { 1.1 }.Transform<double, string>(null));
 
         [Test]
         public void Transform_ArrayIsNull_ThrowArgumentNullException() =>
-            Assert.Throws<ArgumentNullException>(() => ArrayExtension.Transform(null, new ToBinaryRepresentationTransformer()));
+            Assert.Throws<ArgumentNullException>(() => ArrayExtension.Transform<double, string>(null, new ToBinaryRepresentationTransformer()));
 
         [Test]
         public void Transform_ArrayIsEmpty_ThrowArgumentException() =>
@@ -118,23 +118,23 @@ namespace ArrayExtension.Tests
 
         [Test]
         public void Sort_ComparerIsNull_ThrowArgumentNullException() =>
-           Assert.Throws<ArgumentNullException>(() => ArrayExtension.Sort(new string[] { "hello" }, null));
+           Assert.Throws<ArgumentNullException>(() => ArrayExtension.SortBy(new string[] { "hello" }, null));
 
         [Test]
         public void Sort_ArrayIsNull_ThrowArgumentNullException() =>
-            Assert.Throws<ArgumentNullException>(() => ArrayExtension.Sort(null, new StringAscByLengthComparer()));
+            Assert.Throws<ArgumentNullException>(() => ArrayExtension.SortBy(null, new StringAscByLengthComparer()));
 
         [Test]
         public void Sort_ArrayIsEmpty_ThrowArgumentException() =>
-            Assert.Throws<ArgumentException>(() => ArrayExtension.Sort(new string[] { }, new StringAscByLengthComparer()));
+            Assert.Throws<ArgumentException>(() => ArrayExtension.SortBy(new string[] { }, new StringAscByLengthComparer()));
 
         [TestCase(new string[] { "sort", "22", null, "1" }, new string[] { null, "1", "22", "sort" })]
         [TestCase(new string[] { "test", "test1010", "1", "{2}" }, new string[] { "1", "{2}", "test", "test1010" })]
         [TestCase(new string[] { "one", "", "hello", "e" }, new string[] { "", "e", "one", "hello" })]
         public void Sort_ArrayAndAscByLengthComparer_ReturnSortedArrayOfStrings(string[] array, string[] expected)
         {
-            ArrayExtension.Sort(array, new StringAscByLengthComparer());
-            CollectionAssert.AreEqual(array, expected);
+            string[] sorted =  ArrayExtension.SortBy(array, new StringAscByLengthComparer());
+            CollectionAssert.AreEqual(expected, sorted);
         }
 
         [TestCase(new string[] { "1", "111", null, "4444", "hello", null }, new string[] { "hello", "4444", "111", "1", null, null })]
@@ -143,8 +143,8 @@ namespace ArrayExtension.Tests
             new string[] { "some some some.", "someString", "level", "two", "let" })]
         public void Sort_ArrayAndDescByLengthComparer_ReturnSortedArrayOfStrings(string[] array, string[] expected)
         {
-            ArrayExtension.Sort(array, new StringDescByLengthComparer());
-            CollectionAssert.AreEqual(array, expected);
+            string[] sorted = ArrayExtension.SortBy(array, new StringDescByLengthComparer());
+            CollectionAssert.AreEqual(expected, sorted);
         }
 
         [TestCase(new string[] { "one", "ooo", null }, 'o', new string[] { null, "one", "ooo" })]
@@ -153,8 +153,8 @@ namespace ArrayExtension.Tests
         [TestCase(new string[] { "absbsba", "", "hhaaahahh", "halo" }, 'a', new string[] { "", "halo", "absbsba", "hhaaahahh" })]
         public void Sort_ArrayAndAscBySymbolOccurrences_ReturnSortedArrayOfStrings(string[] array, char symbol, string[] expected)
         {
-            ArrayExtension.Sort(array, new StringAscByOccurrencesComparer(symbol));
-            CollectionAssert.AreEqual(array, expected);
+            string[] sorted =  ArrayExtension.SortBy(array, new StringAscByOccurrencesComparer(symbol));
+            CollectionAssert.AreEqual(expected, sorted);
         }
 
         [TestCase(new string[] { null, "one", "ooo", null }, 'o', new string[] { "ooo", "one", null, null })]
@@ -163,26 +163,25 @@ namespace ArrayExtension.Tests
             new string[] { "xxx", "xyzzyxxyzz", "abc", "abcde", "yes" })]
         public void Sort_ArrayAndDescBySymbolOccurences_ReturnSortedArrayOfStrings(string[] array, char symbol, string[] expected)
         {
-            ArrayExtension.Sort(array, new StringDescByOccurrencesComparer(symbol));
-            CollectionAssert.AreEqual(array, expected);
+            string[] sorted = ArrayExtension.SortBy(array, new StringDescByOccurrencesComparer(symbol));
+            CollectionAssert.AreEqual(expected, sorted);
         }
 
         #endregion
 
         #region Sort jagged array
 
-
         [Test]
         public void SortJaggedArray_ArrayIsNull_ThrowArgumentNullException() =>
-            Assert.Throws<ArgumentNullException>(() => ArrayExtension.Sort(null, new LinesDescBySumComparer()));
+            Assert.Throws<ArgumentNullException>(() => ArrayExtension.SortBy(null, new LinesDescBySumComparer()));
 
         [Test]
         public void SortJaggedArray_ArrayIsEmpty_ThrowArgumentException() =>
-            Assert.Throws<ArgumentException>(() => ArrayExtension.Sort(new int[][] { }, new LinesDescBySumComparer()));
+            Assert.Throws<ArgumentException>(() => ArrayExtension.SortBy(new int[][] { }, new LinesDescBySumComparer()));
 
         [Test]
         public void SortJaggedArray_ComparerIsNull__ThrowArgumentNullException() =>
-            Assert.Throws<ArgumentNullException>(() => ArrayExtension.Sort(new int[][] { new int[] { 1, 2 } }, null));
+            Assert.Throws<ArgumentNullException>(() => ArrayExtension.SortBy(new int[][] { new int[] { 1, 2 } }, null));
 
         [Test]
         public void SortJaggedArray_LinesDescBySumComparer()
@@ -203,7 +202,7 @@ namespace ArrayExtension.Tests
                 null,
                 null
             };
-            int[][] sorted = array.Sort(new LinesDescBySumComparer());
+            int[][] sorted = array.SortBy(new LinesDescBySumComparer());
             CollectionAssert.AreEqual(expectedArray, sorted);
         }
 
@@ -228,7 +227,7 @@ namespace ArrayExtension.Tests
                 new int[] { 1, 2, 3, 4, 4 },
                 new int[] { 255, 20, 555 },
             };
-            int[][] sortedArray = array.Sort(new LinesAscBySumComparer());
+            int[][] sortedArray = array.SortBy(new LinesAscBySumComparer());
             CollectionAssert.AreEqual(expectedArray, sortedArray);
         }
         
@@ -253,7 +252,7 @@ namespace ArrayExtension.Tests
                 new int[] { 1, 2, 3, 4, 4},
                 new int[] { 255, 20, 555 }
             };
-            int[][] sortedArray =  array.Sort(new LinesAscByMaxElementComparer());
+            int[][] sortedArray =  array.SortBy(new LinesAscByMaxElementComparer());
             CollectionAssert.AreEqual(expectedArray, sortedArray);
         }
 
@@ -278,7 +277,7 @@ namespace ArrayExtension.Tests
                 null,
                 null
             };
-            int[][] sortedArray = array.Sort(new LinesDescByMaxElementComparer());
+            int[][] sortedArray = array.SortBy(new LinesDescByMaxElementComparer());
             CollectionAssert.AreEqual(expectedArray, sortedArray);
         }
 
@@ -303,7 +302,7 @@ namespace ArrayExtension.Tests
                 new int[] { 200, 80, 1 },
                 new int[] { 1, 2, 3, 4, 5 },
             };
-            CollectionAssert.AreEqual(expectedArray, array.Sort(new LinesAscByMinElementComparer()));
+            CollectionAssert.AreEqual(expectedArray, array.SortBy(new LinesAscByMinElementComparer()));
         }
 
         [Test]
@@ -325,7 +324,7 @@ namespace ArrayExtension.Tests
                 null,
                 null
             };
-            int[][] sortedArray = array.Sort(new LinesDescByMinElementComparer());
+            int[][] sortedArray = array.SortBy(new LinesDescByMinElementComparer());
             CollectionAssert.AreEqual(expectedArray, sortedArray);
         }
 

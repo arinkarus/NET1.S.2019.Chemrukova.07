@@ -6,7 +6,7 @@ namespace TestEntities.Filter
     /// <summary>
     /// Predicate that tells if number contains certain digit.
     /// </summary>
-    public class ContainsDigitPredicate : IPredicate
+    public class ContainsDigitPredicate : IPredicate<int>
     {
         /// <summary>
         /// Digit that will be used for filtering.

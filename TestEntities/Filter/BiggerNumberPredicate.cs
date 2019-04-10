@@ -5,7 +5,7 @@ namespace TestEntities.Filter
     /// <summary>
     /// Predicate that tells if number is bigger that another number. 
     /// </summary>
-    public class BiggerNumberPredicate : IPredicate
+    public class BiggerNumberPredicate : IPredicate<int>
     {
         /// <summary>
         /// Number that will be used for comparison.

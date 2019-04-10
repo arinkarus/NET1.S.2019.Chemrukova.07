@@ -10,7 +10,7 @@ namespace TestEntities.Transform
     /// <summary>
     /// Implements ITransformer interface.
     /// </summary>
-    public class ToBinaryRepresentationTransformer : ITransformer
+    public class ToBinaryRepresentationTransformer : ITransformer<double, string>
     {
         /// <summary>
         /// Transforms double to it's binary string representation.

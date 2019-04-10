@@ -10,7 +10,7 @@ namespace TestEntities.Filter
     /// <summary>
     /// Predicate that tells if number is even.
     /// </summary>
-    public class EvenNumberPredicate : IPredicate
+    public class EvenNumberPredicate : IPredicate<int>
     {
         /// <summary>
         /// Check if number is even.

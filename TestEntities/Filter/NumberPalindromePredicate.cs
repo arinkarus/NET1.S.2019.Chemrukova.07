@@ -5,7 +5,7 @@ namespace TestEntities.Filter
     /// <summary>
     /// Predicate that tells if number is palindrome.
     /// </summary>
-    public class NumberPalindromePredicate : IPredicate
+    public class NumberPalindromePredicate : IPredicate<int>
     {
         /// <summary>
         /// Returns true if number is palindrome.
