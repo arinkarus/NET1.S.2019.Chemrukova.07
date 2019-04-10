@@ -112,6 +112,27 @@ namespace ArrayExtension.Tests
             return array.Transform(new ToEnglishWordsTransformer());
         }
 
+        [Test]
+        public void Transform_ToDecFromStringBaseOutOfRange_ThrowArgumentOutOfRangeException() =>
+            Assert.Throws<ArgumentOutOfRangeException>(() => new string[] { "010" }.Transform
+            (new ToDecimalFromStringTransformer(17)));
+
+        [TestCase("02", 2)]
+        [TestCase("0121", 2)]
+        [TestCase("0332", 3)]
+        [TestCase("-----", 2)]
+        [TestCase("AABAB", 11)]
+        public void Transform_ToDecFromStringInvalidElementsGiven_ThrowArgumentException(string invalidString, int @base) =>
+            Assert.Throws<ArgumentException>(() => new string[] { invalidString }.Transform(new ToDecimalFromStringTransformer(@base)));
+
+        [TestCase(new string[] { "A", "FFF" }, 16, ExpectedResult = new int[] { 10, 4095 })]
+        [TestCase(new string[] { "202", "222" }, 3, ExpectedResult = new int[] { 20, 26 })]
+        [TestCase(new string[] { "10011011", "11111111", "0", "011" }, 2, ExpectedResult = new int[] { 155, 255, 0, 3 })]
+        public int[] Transform_ToDecFromStringConcreteArray_ReturnNumbers(string[] values, int @base)
+        {
+            return values.Transform(new ToDecimalFromStringTransformer(@base));
+        }
+
         #endregion
 
         #region Sort tests

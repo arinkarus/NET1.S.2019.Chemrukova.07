@@ -62,6 +62,7 @@
     <Compile Include="Transform\Float64.cs" />
     <Compile Include="Transform\ToBinaryRepresentationTransformer.cs" />
     <Compile Include="Transform\ToEnglishWordsTransformer.cs" />
+    <Compile Include="Transform\ToDecimalFromStringTransformer.cs" />
     <Compile Include="Transform\ToRussianWordsTransformer.cs" />
     <Compile Include="Transform\ToWordsTransformer.cs" />
   </ItemGroup>
