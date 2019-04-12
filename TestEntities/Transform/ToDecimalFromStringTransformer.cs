@@ -19,7 +19,6 @@ namespace TestEntities.Transform
         /// <param name="base">Given base.</param>
         public ToDecimalFromStringTransformer(int @base)
         {
-            CheckBase(@base);
             this.@base = @base;
         }
 
@@ -30,44 +29,85 @@ namespace TestEntities.Transform
         /// <returns>Number in decimal notation.</returns>
         public int Transform(string value)
         {
-            int number = 0;
-            foreach(char symbol in value)
-            {
-                int current = GetCurrentNumber(symbol);
-                CheckCurrentDigit(current);
-                number = number * this.@base + current; 
-            }
-            return number;
+            var numberSystem = new NumberSystem(this.@base);
+            return numberSystem.Transform(value);
         }
 
-        private int GetCurrentNumber(char symbol)
+        /// <summary>
+        /// Represents the number system.
+        /// </summary>
+        internal class NumberSystem
         {
-            if (symbol >= '0' && symbol <= '9')
-            {
-               return symbol - '0';
-            }
-            symbol = Char.ToUpper(symbol);
-            if (symbol >= 'A' && symbol <= 'F')
-            {
-               return symbol - 'A' + 10;
-            }
-            throw new ArgumentException("Invalid symbol in string");
-        }
+            /// <summary>
+            /// Base that is from 2 to 16.
+            /// </summary>
+            private readonly int @base;
 
-        private void CheckBase(int @base)
-        {
-            if (@base < 2 || @base > 16)
+            /// <summary>
+            /// Alphabet for selected number system.
+            /// </summary>
+            private readonly Dictionary<char, int> alphabet;
+           
+            /// <summary>
+            /// Initializes a new instance of the <see cref="NumberSystem"/> class.
+            /// </summary>
+            /// <param name="base">Given base.</param>
+            public NumberSystem(int @base)
             {
-                throw new ArgumentOutOfRangeException($"{nameof(@base)} has to be between 2 and 16!");
+                CheckBase(@base);
+                this.@base = @base;
+                alphabet = GetAphabet(@base);
             }
-        }
 
-        private void CheckCurrentDigit(int value)
-        {
-            if (value >=  @base)
+            /// <summary>
+            /// Transforms from string to number. 
+            /// </summary>
+            /// <param name="input">Given string.</param>
+            /// <returns>Number in decimal.</returns>
+            public int Transform(string input)
             {
-                throw new ArgumentException("Invalid digit for selected base!");
-            }  
+                int number = 0;
+                foreach (char symbol in input)
+                {
+                    var symbolToCheck = char.ToUpper(symbol);
+                    if (!this.alphabet.ContainsKey(symbolToCheck))
+                    {
+                        throw new ArgumentException($"{nameof(symbol)} is invalid for transforming!");
+                    }
+
+                    int current = alphabet[symbolToCheck];
+                    number = number * this.@base + current;
+                }
+                var some = new NumberSystem(@base);
+                return number;
+            }
+
+            private void CheckBase(int @base)
+            {
+                if (@base < 2 || @base > 16)
+                {
+                    throw new ArgumentOutOfRangeException($"{nameof(@base)} has to be between 2 and 16!");
+                }
+
+            }
+
+            private Dictionary<char, int> GetAphabet(int @base)
+            {
+                var alphabet = new Dictionary<char, int>();
+                for (int i = 0; i < @base; i++)
+                {
+                    if (i < 10)
+                    {
+                        alphabet[(char)(i + '0')] = i;
+                    }
+                    else
+                    {
+                        alphabet[(char)(i + 'A' - 10)] = i;
+                    }
+                }
+                return alphabet;
+            }
+
         }
     }
 }
