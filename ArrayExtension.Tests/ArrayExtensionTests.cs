@@ -154,7 +154,7 @@ namespace ArrayExtension.Tests
         [TestCase(new string[] { "one", "", "hello", "e" }, new string[] { "", "e", "one", "hello" })]
         public void Sort_ArrayAndAscByLengthComparer_ReturnSortedArrayOfStrings(string[] array, string[] expected)
         {
-            string[] sorted =  ArrayExtension.SortBy(array, new StringAscByLengthComparer());
+            string[] sorted = ArrayExtension.SortBy(array, new StringAscByLengthComparer());
             CollectionAssert.AreEqual(expected, sorted);
         }
 
@@ -174,7 +174,7 @@ namespace ArrayExtension.Tests
         [TestCase(new string[] { "absbsba", "", "hhaaahahh", "halo" }, 'a', new string[] { "", "halo", "absbsba", "hhaaahahh" })]
         public void Sort_ArrayAndAscBySymbolOccurrences_ReturnSortedArrayOfStrings(string[] array, char symbol, string[] expected)
         {
-            string[] sorted =  ArrayExtension.SortBy(array, new StringAscByOccurrencesComparer(symbol));
+            string[] sorted = ArrayExtension.SortBy(array, new StringAscByOccurrencesComparer(symbol));
             CollectionAssert.AreEqual(expected, sorted);
         }
 
@@ -237,21 +237,21 @@ namespace ArrayExtension.Tests
                 null,
                 new int[] { 1, 2, 3, 4, 4 },
                 null,
-                new int[] {0, 0, 0},
+                new int[] { 0, 0, 0 },
             };
             int[][] expectedArray = new int[][]
             {
                 null,
                 null,
                 new int[] { -200, -400, 0 },
-                new int[] {0, 0, 0},
+                new int[] { 0, 0, 0 },
                 new int[] { 1, 2, 3, 4, 4 },
                 new int[] { 255, 20, 555 },
             };
             int[][] sortedArray = array.SortBy(new LinesAscBySumComparer());
             CollectionAssert.AreEqual(expectedArray, sortedArray);
         }
-        
+
         [Test]
         public void SortJaggedArray_LinesAscByMaxElementComparer()
         {
@@ -262,18 +262,18 @@ namespace ArrayExtension.Tests
                 null,
                 new int[] { 1, 2, 3, 4, 4 },
                 null,
-                new int[] {0, 0, 0},
+                new int[] { 0, 0, 0 },
             };
             int[][] expectedArray = new int[][]
             {
                 null,
                 null,
                 new int[] { -200, -400, 0 },
-                new int[] { 0, 0, 0},
-                new int[] { 1, 2, 3, 4, 4},
+                new int[] { 0, 0, 0 },
+                new int[] { 1, 2, 3, 4, 4 },
                 new int[] { 255, 20, 555 }
             };
-            int[][] sortedArray =  array.SortBy(new LinesAscByMaxElementComparer());
+            int[][] sortedArray = array.SortBy(new LinesAscByMaxElementComparer());
             CollectionAssert.AreEqual(expectedArray, sortedArray);
         }
 
@@ -287,14 +287,14 @@ namespace ArrayExtension.Tests
                 null,
                 new int[] { 1, 2, 3, 4, 4 },
                 null,
-                new int[] {0, 0, 0},
+                new int[] { 0, 0, 0 },
             };
             int[][] expectedArray = new int[][]
             {
                 new int[] { 255, 20, 555 },
-                new int[] { 1, 2, 3, 4, 4},
+                new int[] { 1, 2, 3, 4, 4 },
                 new int[] { -200, -400, 0 },
-                new int[] { 0, 0, 0},
+                new int[] { 0, 0, 0 },
                 null,
                 null
             };
@@ -348,6 +348,51 @@ namespace ArrayExtension.Tests
             int[][] sortedArray = array.SortBy(new LinesDescByMinElementComparer());
             CollectionAssert.AreEqual(expectedArray, sortedArray);
         }
+
+        #endregion
+
+        #region BinarySearchTestCases
+
+        private static IEnumerable<TestCaseData> BinarySearchTestCases
+        {
+            get
+            {
+                yield return new TestCaseData(arg1: new TestEntityForBinarySearch<string>(new string[] { "the greatest length string", "some some some some", "length string",
+                    "less", null }, null, new StringDescByLengthComparer()), arg2: 4);
+
+                yield return new TestCaseData(arg1: new TestEntityForBinarySearch<string>(
+                    new string[] { "some string" }, "some string", new StringAscByLengthComparer()), arg2: 0);
+
+                yield return new TestCaseData(arg1: new TestEntityForBinarySearch<string>(new string[] { "the greatest length string", "some some some some", "length string",
+                    "less", "hi" }, "less", new StringDescByLengthComparer()), arg2: 3);
+
+                yield return new TestCaseData(arg1: new TestEntityForBinarySearch<int>(new int[] { 1, 2, 3, 4 }, 4, Comparer<int>.Default), arg2: 3);
+
+                yield return new TestCaseData(arg1: new TestEntityForBinarySearch<int>(new int[] { 1, 5, 7, 9, 1 }, 10, Comparer<int>.Default), arg2: -1);
+
+                yield return new TestCaseData(arg1: new TestEntityForBinarySearch<int[]>(new int[][] { new int[] { 1, 2, 3 }, new int[] { 4, 5, 6 }, new int[] { 7, 8, 9 } },
+                    new int[] { 7, 8, 9 }, new LinesAscBySumComparer()), arg2: 2);
+            }
+        }
+
+        [Test, TestCaseSource(nameof(BinarySearchTestCases))]
+        public void BinarySearch_ConcreteArray_ReturnIndex<T>(TestEntityForBinarySearch<T> data, int expectedIndex)
+        {
+            int actualIndex = data.array.BinarySearch(data.itemToSearch, data.comparer);
+            Assert.AreEqual(expectedIndex, actualIndex);
+        }
+
+        [Test]
+        public void BinarySearch_ArrayIsNull_ThrowArgumentNullException() =>
+            Assert.Throws<ArgumentNullException>(() => ArrayExtension.BinarySearch<string>(null, "str", new StringAscByLengthComparer()));
+
+        [Test]
+        public void BinarySearch_ArrayIsEmpty_ThrowArgumentException() =>
+            Assert.Throws<ArgumentException>(() => new string[] { }.BinarySearch("str", new StringAscByLengthComparer()));
+
+        [Test]
+        public void BinarySearch_ComparerIsEmpty_ThrowArgumentNullException() =>
+            Assert.Throws<ArgumentNullException>(() => new string[] { "some" }.BinarySearch("str", null));
 
         #endregion
     }

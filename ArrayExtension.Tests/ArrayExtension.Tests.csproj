@@ -50,6 +50,7 @@
   <ItemGroup>
     <Compile Include="ArrayExtensionTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestEntityForBinarySearch.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

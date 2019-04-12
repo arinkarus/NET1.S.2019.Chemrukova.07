@@ -13,6 +13,7 @@ namespace ArrayExtension
         /// <summary>
         /// Filters array by some predicate.
         /// </summary>
+        /// <typeparam name="T">Given type.</typeparam>
         /// <param name="array">Given array.</param>
         /// <param name="predicate">Given predicate.</param>
         /// <returns>Filtered array.</returns>
@@ -39,6 +40,8 @@ namespace ArrayExtension
         /// <summary>
         /// Transforms array of double numbers to array of strings.
         /// </summary>
+        /// <typeparam name="TSource">Source type.</typeparam>
+        /// <typeparam name="TDest">Destination type.</typeparam>
         /// <param name="array">Given array.</param>
         /// <param name="transformer">Given transformer.</param>
         /// <returns>Array of strings.</returns>
@@ -60,10 +63,12 @@ namespace ArrayExtension
         }
 
         /// <summary>
-        /// Sort array depending on passed criteria (comparer).
+        /// Return sorted array depending on passed criteria (comparer).
         /// </summary>
+        /// <typeparam name="T">Given type.</typeparam>
         /// <param name="array">Given array.</param>
         /// <param name="comparer">Given comparer.</param>
+        /// <returns>Sorted array.</returns>
         /// <exception cref="ArgumentNullException">Thrown when comparer is null
         /// or array is null.
         /// </exception>
@@ -76,6 +81,65 @@ namespace ArrayExtension
             array.CopyTo(arrayToSort, 0);
             Array.Sort(arrayToSort, comparer);
             return arrayToSort;
+        }
+
+        /// <summary>
+        /// Binary search algorithms implementation.
+        /// </summary>
+        /// <typeparam name="T">Given type.</typeparam>
+        /// <param name="array">Array for searching.</param>
+        /// <param name="itemToSearch">Item that has to be found.</param>
+        /// <param name="comparer">Comparer that is used for searching.</param>
+        /// <returns>Index of found element.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when comparer is null
+        /// or array is null.
+        /// </exception>
+        /// <exception cref="ArgumentException">Thrown when array is empty.</exception>
+        public static int BinarySearch<T>(this T[] array, T itemToSearch, IComparer<T> comparer)
+        {
+            ValidateArray(array);
+            CheckOnNull(comparer);
+            int leftIndex = array.GetLowerBound(0);
+            int rightIndex = array.GetUpperBound(0);
+            if (leftIndex == rightIndex)
+            {
+                return leftIndex;
+            }
+
+            while (true)
+            {
+                if (rightIndex - leftIndex == 1)
+                {
+                    if (comparer.Compare(array[leftIndex], itemToSearch) == 0)
+                    {
+                        return leftIndex;
+                    }
+
+                    if (comparer.Compare(array[rightIndex], itemToSearch) == 0)
+                    {
+                        return rightIndex;
+                    }
+
+                    return -1;
+                }
+               
+                int middleIndex = leftIndex + ((rightIndex - leftIndex) / 2);
+                int comparisonResult = comparer.Compare(array[middleIndex], itemToSearch);
+                if (comparisonResult == 0)
+                {
+                    return middleIndex;
+                }
+
+                if (comparisonResult < 0)
+                {
+                    leftIndex = middleIndex;
+                }
+
+                if (comparisonResult > 0)
+                {
+                    rightIndex = middleIndex;
+                }
+            }
         }
 
         /// <summary>
