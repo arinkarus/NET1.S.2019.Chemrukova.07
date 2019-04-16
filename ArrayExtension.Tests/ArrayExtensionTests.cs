@@ -367,7 +367,7 @@ namespace ArrayExtension.Tests
                     "less", "hi" }, "less", new StringDescByLengthComparer()), arg2: 3);
 
                 yield return new TestCaseData(arg1: new TestEntityForBinarySearch<string>(new string[] { "the greatest length string", "some some some some", "length string",
-                    "less", "hi" }, "less", null), arg2: 3);
+                   "less", "hi" }, "less", null), arg2: 3);
 
                 yield return new TestCaseData(arg1: new TestEntityForBinarySearch<int>(new int[] { 1, 2, 3, 4 }, 4, Comparer<int>.Default), arg2: 3);
 

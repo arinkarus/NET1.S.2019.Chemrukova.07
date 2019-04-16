@@ -100,12 +100,11 @@ namespace ArrayExtension
         public static int BinarySearch<T>(this T[] array, int index, int length, T itemToSearch, IComparer<T> comparer = null)
         {
             if (comparer == null)
-            {
-                if ((comparer is IComparer))
+            {      
+                if (!(itemToSearch is IComparable<T> || itemToSearch is IComparable))
                 {
                     throw new ArgumentException($"Default comparer not found: {nameof(comparer)}");
                 }
-
                 comparer = Comparer<T>.Default;
             }
 
