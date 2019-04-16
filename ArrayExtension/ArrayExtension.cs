@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using ArrayExtension.Filter;
 using ArrayExtension.Transform;
+using ArrayExtension.Exceptions;
 
 namespace ArrayExtension
 {
@@ -103,7 +104,7 @@ namespace ArrayExtension
             {      
                 if (!(itemToSearch is IComparable<T> || itemToSearch is IComparable))
                 {
-                    throw new ArgumentException($"Default comparer not found: {nameof(comparer)}");
+                    throw new ComparisonIsNotFound($"Can't find comparison.");
                 }
                 comparer = Comparer<T>.Default;
             }

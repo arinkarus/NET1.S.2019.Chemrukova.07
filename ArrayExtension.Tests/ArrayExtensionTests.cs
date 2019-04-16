@@ -6,6 +6,7 @@ using TestEntities.Filter;
 using TestEntities.StringSort;
 using TestEntities.Transform;
 using TestEntities.JaggedArraySort;
+using ArrayExtension.Exceptions;
 
 namespace ArrayExtension.Tests
 {
@@ -395,11 +396,10 @@ namespace ArrayExtension.Tests
 
         [Test]
         public void BinarySearch_NoDefaultComparer_ReturnIndex() =>
-            Assert.Throws<ArgumentException>(() =>
+            Assert.Throws<ComparisonIsNotFound>(() =>
             new EntityWithoutComparer[] { new EntityWithoutComparer { Value = 5 },
                 new EntityWithoutComparer { Value = 6 } }.
            BinarySearch<EntityWithoutComparer>(new EntityWithoutComparer { }));
-
             
         #endregion
     }
