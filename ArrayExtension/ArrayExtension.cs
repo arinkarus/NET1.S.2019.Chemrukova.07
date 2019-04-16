@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using ArrayExtension.Filter;
 using ArrayExtension.Transform;
@@ -84,6 +85,34 @@ namespace ArrayExtension
         }
 
         /// <summary>
+        /// Returns index of found element.
+        /// </summary>
+        /// <typeparam name="T">Given type.</typeparam>
+        /// <param name="array">Given array.</param>
+        /// <param name="index">Start index.</param>
+        /// <param name="length">Length from start index.</param>
+        /// <param name="itemToSearch">Item to search.</param>
+        /// <param name="comparer">Given comparer.</param>
+        /// <returns>Found index.</returns>
+        /// <exception cref="ArgumentException">Thrown when array is empty or default 
+        /// comparer is not found.
+        /// </exception>
+        public static int BinarySearch<T>(this T[] array, int index, int length, T itemToSearch, IComparer<T> comparer = null)
+        {
+            if (comparer == null)
+            {
+                if ((comparer is IComparer))
+                {
+                    throw new ArgumentException($"Default comparer not found: {nameof(comparer)}");
+                }
+
+                comparer = Comparer<T>.Default;
+            }
+
+            return GetResultOfBinarySearch(array, index, length - 1, itemToSearch, comparer);
+        }
+
+        /// <summary>
         /// Binary search algorithms implementation.
         /// </summary>
         /// <typeparam name="T">Given type.</typeparam>
@@ -94,13 +123,34 @@ namespace ArrayExtension
         /// <exception cref="ArgumentNullException">Thrown when comparer is null
         /// or array is null.
         /// </exception>
-        /// <exception cref="ArgumentException">Thrown when array is empty.</exception>
-        public static int BinarySearch<T>(this T[] array, T itemToSearch, IComparer<T> comparer)
+        /// <exception cref="ArgumentException">Thrown when array is empty or default 
+        /// comparer is not found.
+        /// </exception>
+        public static int BinarySearch<T>(this T[] array, T itemToSearch, IComparer<T> comparer = null)
         {
             ValidateArray(array);
-            CheckOnNull(comparer);
             int leftIndex = array.GetLowerBound(0);
-            int rightIndex = array.GetUpperBound(0);
+            return BinarySearch<T>(array, leftIndex, array.Length, itemToSearch, comparer); 
+        }
+
+        /// <summary>
+        /// Checks array for null or emptiness. 
+        /// </summary>
+        /// <typeparam name="T">T type for array.</typeparam>
+        /// <param name="array">Given array.</param>
+        /// <exception cref="ArgumentNullException">Thrown if array is null.</exception>
+        /// <exception cref="ArgumentException">Thrown if array is empty.</exception>
+        public static void ValidateArray<T>(T[] array)
+        {
+            CheckOnNull(array);
+            if (array.Length == 0)
+            {
+                throw new ArgumentException($"{nameof(array)} can't be empty.");
+            }
+        }
+
+        private static int GetResultOfBinarySearch<T>(this T[] array, int leftIndex, int rightIndex, T itemToSearch, IComparer<T> comparer = null)
+        {
             if (leftIndex == rightIndex)
             {
                 return leftIndex;
@@ -122,7 +172,7 @@ namespace ArrayExtension
 
                     return -1;
                 }
-               
+
                 int middleIndex = leftIndex + ((rightIndex - leftIndex) / 2);
                 int comparisonResult = comparer.Compare(array[middleIndex], itemToSearch);
                 if (comparisonResult == 0)
@@ -139,22 +189,6 @@ namespace ArrayExtension
                 {
                     rightIndex = middleIndex;
                 }
-            }
-        }
-
-        /// <summary>
-        /// Checks array for null or emptiness. 
-        /// </summary>
-        /// <typeparam name="T">T type for array.</typeparam>
-        /// <param name="array">Given array.</param>
-        /// <exception cref="ArgumentNullException">Thrown if array is null.</exception>
-        /// <exception cref="ArgumentException">Thrown if array is empty.</exception>
-        public static void ValidateArray<T>(T[] array)
-        {
-            CheckOnNull(array);
-            if (array.Length == 0)
-            {
-                throw new ArgumentException($"{nameof(array)} can't be empty.");
             }
         }
 

@@ -15,4 +15,9 @@ namespace ArrayExtension.Tests
             this.itemToSearch = itemToSearch;
         }
     }
+
+    public class EntityWithoutComparer
+    {
+        public int Value { get; set; }
+    }
 }

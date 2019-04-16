@@ -366,6 +366,9 @@ namespace ArrayExtension.Tests
                 yield return new TestCaseData(arg1: new TestEntityForBinarySearch<string>(new string[] { "the greatest length string", "some some some some", "length string",
                     "less", "hi" }, "less", new StringDescByLengthComparer()), arg2: 3);
 
+                yield return new TestCaseData(arg1: new TestEntityForBinarySearch<string>(new string[] { "the greatest length string", "some some some some", "length string",
+                    "less", "hi" }, "less", null), arg2: 3);
+
                 yield return new TestCaseData(arg1: new TestEntityForBinarySearch<int>(new int[] { 1, 2, 3, 4 }, 4, Comparer<int>.Default), arg2: 3);
 
                 yield return new TestCaseData(arg1: new TestEntityForBinarySearch<int>(new int[] { 1, 5, 7, 9, 1 }, 10, Comparer<int>.Default), arg2: -1);
@@ -391,9 +394,13 @@ namespace ArrayExtension.Tests
             Assert.Throws<ArgumentException>(() => new string[] { }.BinarySearch("str", new StringAscByLengthComparer()));
 
         [Test]
-        public void BinarySearch_ComparerIsEmpty_ThrowArgumentNullException() =>
-            Assert.Throws<ArgumentNullException>(() => new string[] { "some" }.BinarySearch("str", null));
+        public void BinarySearch_NoDefaultComparer_ReturnIndex() =>
+            Assert.Throws<ArgumentException>(() =>
+            new EntityWithoutComparer[] { new EntityWithoutComparer { Value = 5 },
+                new EntityWithoutComparer { Value = 6 } }.
+           BinarySearch<EntityWithoutComparer>(new EntityWithoutComparer { }));
 
+            
         #endregion
     }
 }

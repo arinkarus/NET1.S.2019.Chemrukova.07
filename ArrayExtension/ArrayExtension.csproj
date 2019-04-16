@@ -41,7 +41,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ArrayExtension.cs" />
+    <Compile Include="ArrayExtension.cs">
+      <ExcludeFromStyleCop>False</ExcludeFromStyleCop>
+    </Compile>
     <Compile Include="Interfaces\IPredicate.cs" />
     <Compile Include="Interfaces\ITransformer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -76,7 +76,7 @@ namespace TestEntities.Transform
                     }
 
                     int current = alphabet[symbolToCheck];
-                    number = number * this.@base + current;
+                    number = checked(number * this.@base + current);
                 }
                 var some = new NumberSystem(@base);
                 return number;
