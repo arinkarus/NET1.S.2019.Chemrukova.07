@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using ArrayExtension.Filter;
 using ArrayExtension.Transform;
 using ArrayExtension.Exceptions;
+using System.Collections.ObjectModel;
 
 namespace ArrayExtension
 {
@@ -13,76 +14,80 @@ namespace ArrayExtension
     public static class ArrayExtension
     {
         /// <summary>
-        /// Filters array by some predicate.
+        /// Filters values by some predicate.
         /// </summary>
         /// <typeparam name="T">Given type.</typeparam>
-        /// <param name="array">Given array.</param>
+        /// <param name="source">Given source.</param>
         /// <param name="predicate">Given predicate.</param>
         /// <returns>Filtered array.</returns>
         /// <exception cref="ArgumentNullException">Thrown when predicate is null
-        /// or array is null.
+        /// or souce is null.
         /// </exception>
-        /// <exception cref="ArgumentException">Thrown when array is empty.</exception>
-        public static T[] Filter<T>(this T[] array, IPredicate<T> predicate)
+        public static IEnumerable<T> Filter<T>(this IEnumerable<T> source, IPredicate<T> predicate)
         {
-            ValidateArray(array);
-            CheckOnNull(predicate);
-            var filtered = new List<T>();
-            for (int i = 0;  i < array.Length; i++)
+            CheckOnNull(source);
+            CheckOnNull(predicate);    
+            IEnumerable<T> GetFilteredItems(IEnumerable<T> items, IPredicate<T> givenPredicate)
             {
-                if (predicate.IsMatch(array[i]))
+                foreach (var item in source)
                 {
-                    filtered.Add(array[i]);
+                    if (predicate.IsMatch(item))
+                    {
+                        yield return item;
+                    }
                 }
             }
 
-            return filtered.ToArray();
+            return GetFilteredItems(source, predicate);
         }
 
         /// <summary>
-        /// Transforms array of double numbers to array of strings.
+        /// Transforms array of double numbers to source of dest.
         /// </summary>
         /// <typeparam name="TSource">Source type.</typeparam>
         /// <typeparam name="TDest">Destination type.</typeparam>
-        /// <param name="array">Given array.</param>
+        /// <param name="source">Given source.</param>
         /// <param name="transformer">Given transformer.</param>
-        /// <returns>Array of strings.</returns>
+        /// <returns>Transformed values.</returns>
         /// /// <exception cref="ArgumentNullException">Thrown when transformer is null
-        /// or array is null.
+        /// or source is null.
         /// </exception>
-        /// <exception cref="ArgumentException">Thrown when array is empty.</exception>
-        public static TDest[] Transform<TSource, TDest>(this TSource[] array, ITransformer<TSource, TDest> transformer)
+        public static IEnumerable<TDest> Transform<TSource, TDest>(this IEnumerable<TSource> source, ITransformer<TSource, TDest> transformer)
         {
-            ValidateArray(array);
+            CheckOnNull(source);
             CheckOnNull(transformer);
-            var stringRepresentations = new TDest[array.Length];
-            for (int i = 0; i < array.Length; i++)
+            IEnumerable<TDest> GetItems()
             {
-                stringRepresentations[i] = transformer.Transform(array[i]);
-            }
-
-            return stringRepresentations;
+                foreach (var item in source)
+                {
+                    TDest value = transformer.Transform(item);
+                    yield return value;
+                }
+            }         
+            
+            return GetItems();
         }
 
         /// <summary>
-        /// Return sorted array depending on passed criteria (comparer).
+        /// Return sorted values depending on passed criteria (comparer).
         /// </summary>
         /// <typeparam name="T">Given type.</typeparam>
-        /// <param name="array">Given array.</param>
+        /// <param name="source">Given source.</param>
         /// <param name="comparer">Given comparer.</param>
-        /// <returns>Sorted array.</returns>
+        /// <returns>Sorted values.</returns>
         /// <exception cref="ArgumentNullException">Thrown when comparer is null
-        /// or array is null.
+        /// or source is null.
         /// </exception>
-        /// <exception cref="ArgumentException">Thrown when array is empty.</exception>
-        public static T[] SortBy<T>(this T[] array, IComparer<T> comparer)
+        public static IEnumerable<T> SortBy<T>(this IEnumerable<T> source, IComparer<T> comparer)
         {
-            ValidateArray(array);
             CheckOnNull(comparer);
-            var arrayToSort = new T[array.Length];
-            array.CopyTo(arrayToSort, 0);
-            Array.Sort(arrayToSort, comparer);
-            return arrayToSort;
+            List<T> list = new List<T>(source);
+            return GetSorted();
+            IEnumerable<T> GetSorted()
+            {
+                list.Sort(comparer);
+                return list;
+            }
         }
 
         /// <summary>
@@ -106,6 +111,7 @@ namespace ArrayExtension
                 {
                     throw new ComparisonIsNotFound($"Can't find comparison.");
                 }
+
                 comparer = Comparer<T>.Default;
             }
 

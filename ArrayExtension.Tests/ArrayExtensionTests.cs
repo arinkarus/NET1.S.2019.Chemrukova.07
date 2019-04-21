@@ -6,6 +6,7 @@ using TestEntities.Filter;
 using TestEntities.StringSort;
 using TestEntities.Transform;
 using TestEntities.JaggedArraySort;
+using System.Linq;
 using ArrayExtension.Exceptions;
 
 namespace ArrayExtension.Tests
@@ -42,10 +43,6 @@ namespace ArrayExtension.Tests
             Assert.Throws<ArgumentNullException>(() => ArrayExtension.Filter<int>(null, new NumberPalindromePredicate()));
 
         [Test]
-        public void Filter_ArrayIsEmpty_ThrowArgumentException() =>
-          Assert.Throws<ArgumentException>(() => new int[] { }.Filter(new NumberPalindromePredicate()));
-
-        [Test]
         public void Filter_PredicateIsNull__ThrowArgumentNullException() =>
             Assert.Throws<ArgumentNullException>(() => new int[] { 2, 5 }.Filter(null));
 
@@ -72,10 +69,6 @@ namespace ArrayExtension.Tests
         public void Transform_ArrayIsNull_ThrowArgumentNullException() =>
             Assert.Throws<ArgumentNullException>(() => ArrayExtension.Transform<double, string>(null, new ToBinaryRepresentationTransformer()));
 
-        [Test]
-        public void Transform_ArrayIsEmpty_ThrowArgumentException() =>
-            Assert.Throws<ArgumentException>(() => new double[] { }.Transform(new ToBinaryRepresentationTransformer()));
-
         [TestCase(new double[] { -255.255, 255.255 }, ExpectedResult = new string[]
             { "1100000001101111111010000010100011110101110000101000111101011100",
              "0100000001101111111010000010100011110101110000101000111101011100" })]
@@ -88,7 +81,7 @@ namespace ArrayExtension.Tests
             "1000000000000000000000000000000000000000000000000000000000000000"  })]
         public string[] Transform_ArrayAndToBinaryTransformer_ReturnArrayOfStrings(double[] array)
         {
-            return array.Transform(new ToBinaryRepresentationTransformer());
+            return array.Transform(new ToBinaryRepresentationTransformer()).ToArray();
         }
 
         [TestCase(new double[] { 1.21, 1E-10, 2 }, ExpectedResult = new string[]
@@ -99,7 +92,7 @@ namespace ArrayExtension.Tests
             ExpectedResult = new string[] { "Плюс бесконечность", "Минус бесконечность" })]
         public string[] Transform_ArrayToRussianWords_ReturnArrayOfStrings(double[] array)
         {
-            return array.Transform(new ToRussianWordsTransformer());
+            return array.Transform(new ToRussianWordsTransformer()).ToArray();
         }
 
         [TestCase(new double[] { 1E-10, 3.2 }, ExpectedResult = new string[]
@@ -110,13 +103,13 @@ namespace ArrayExtension.Tests
             new string[] { "three three zero", "Positive Infinity", "Negative Infinity" })]
         public string[] Transform_ArrayToEnglishWords_ReturnArrayOfStrings(double[] array)
         {
-            return array.Transform(new ToEnglishWordsTransformer());
+            return array.Transform(new ToEnglishWordsTransformer()).ToArray();
         }
 
         [Test]
         public void Transform_ToDecFromStringBaseOutOfRange_ThrowArgumentOutOfRangeException() =>
             Assert.Throws<ArgumentOutOfRangeException>(() => new string[] { "010" }.Transform
-            (new ToDecimalFromStringTransformer(17)));
+            (new ToDecimalFromStringTransformer(17)).ToArray());
 
         [TestCase("02", 2)]
         [TestCase("0121", 2)]
@@ -124,14 +117,14 @@ namespace ArrayExtension.Tests
         [TestCase("-----", 2)]
         [TestCase("AABAB", 11)]
         public void Transform_ToDecFromStringInvalidElementsGiven_ThrowArgumentException(string invalidString, int @base) =>
-            Assert.Throws<ArgumentException>(() => new string[] { invalidString }.Transform(new ToDecimalFromStringTransformer(@base)));
+            Assert.Throws<ArgumentException>(() => new string[] { invalidString }.Transform(new ToDecimalFromStringTransformer(@base)).ToArray());
 
         [TestCase(new string[] { "A", "FFF" }, 16, ExpectedResult = new int[] { 10, 4095 })]
         [TestCase(new string[] { "202", "222" }, 3, ExpectedResult = new int[] { 20, 26 })]
         [TestCase(new string[] { "10011011", "11111111", "0", "011" }, 2, ExpectedResult = new int[] { 155, 255, 0, 3 })]
         public int[] Transform_ToDecFromStringConcreteArray_ReturnNumbers(string[] values, int @base)
         {
-            return values.Transform(new ToDecimalFromStringTransformer(@base));
+            return values.Transform(new ToDecimalFromStringTransformer(@base)).ToArray();
         }
 
         #endregion
@@ -146,16 +139,12 @@ namespace ArrayExtension.Tests
         public void Sort_ArrayIsNull_ThrowArgumentNullException() =>
             Assert.Throws<ArgumentNullException>(() => ArrayExtension.SortBy(null, new StringAscByLengthComparer()));
 
-        [Test]
-        public void Sort_ArrayIsEmpty_ThrowArgumentException() =>
-            Assert.Throws<ArgumentException>(() => ArrayExtension.SortBy(new string[] { }, new StringAscByLengthComparer()));
-
         [TestCase(new string[] { "sort", "22", null, "1" }, new string[] { null, "1", "22", "sort" })]
         [TestCase(new string[] { "test", "test1010", "1", "{2}" }, new string[] { "1", "{2}", "test", "test1010" })]
         [TestCase(new string[] { "one", "", "hello", "e" }, new string[] { "", "e", "one", "hello" })]
         public void Sort_ArrayAndAscByLengthComparer_ReturnSortedArrayOfStrings(string[] array, string[] expected)
         {
-            string[] sorted = ArrayExtension.SortBy(array, new StringAscByLengthComparer());
+            string[] sorted = ArrayExtension.SortBy(array, new StringAscByLengthComparer()).ToArray();
             CollectionAssert.AreEqual(expected, sorted);
         }
 
@@ -165,7 +154,7 @@ namespace ArrayExtension.Tests
             new string[] { "some some some.", "someString", "level", "two", "let" })]
         public void Sort_ArrayAndDescByLengthComparer_ReturnSortedArrayOfStrings(string[] array, string[] expected)
         {
-            string[] sorted = ArrayExtension.SortBy(array, new StringDescByLengthComparer());
+            string[] sorted = ArrayExtension.SortBy(array, new StringDescByLengthComparer()).ToArray();
             CollectionAssert.AreEqual(expected, sorted);
         }
 
@@ -175,7 +164,7 @@ namespace ArrayExtension.Tests
         [TestCase(new string[] { "absbsba", "", "hhaaahahh", "halo" }, 'a', new string[] { "", "halo", "absbsba", "hhaaahahh" })]
         public void Sort_ArrayAndAscBySymbolOccurrences_ReturnSortedArrayOfStrings(string[] array, char symbol, string[] expected)
         {
-            string[] sorted = ArrayExtension.SortBy(array, new StringAscByOccurrencesComparer(symbol));
+            string[] sorted = ArrayExtension.SortBy(array, new StringAscByOccurrencesComparer(symbol)).ToArray();
             CollectionAssert.AreEqual(expected, sorted);
         }
 
@@ -185,7 +174,7 @@ namespace ArrayExtension.Tests
             new string[] { "xxx", "xyzzyxxyzz", "abc", "abcde", "yes" })]
         public void Sort_ArrayAndDescBySymbolOccurences_ReturnSortedArrayOfStrings(string[] array, char symbol, string[] expected)
         {
-            string[] sorted = ArrayExtension.SortBy(array, new StringDescByOccurrencesComparer(symbol));
+            string[] sorted = ArrayExtension.SortBy(array, new StringDescByOccurrencesComparer(symbol)).ToArray();
             CollectionAssert.AreEqual(expected, sorted);
         }
 
@@ -196,10 +185,6 @@ namespace ArrayExtension.Tests
         [Test]
         public void SortJaggedArray_ArrayIsNull_ThrowArgumentNullException() =>
             Assert.Throws<ArgumentNullException>(() => ArrayExtension.SortBy(null, new LinesDescBySumComparer()));
-
-        [Test]
-        public void SortJaggedArray_ArrayIsEmpty_ThrowArgumentException() =>
-            Assert.Throws<ArgumentException>(() => ArrayExtension.SortBy(new int[][] { }, new LinesDescBySumComparer()));
 
         [Test]
         public void SortJaggedArray_ComparerIsNull__ThrowArgumentNullException() =>
@@ -224,7 +209,7 @@ namespace ArrayExtension.Tests
                 null,
                 null
             };
-            int[][] sorted = array.SortBy(new LinesDescBySumComparer());
+            int[][] sorted = array.SortBy(new LinesDescBySumComparer()).ToArray();
             CollectionAssert.AreEqual(expectedArray, sorted);
         }
 
@@ -249,7 +234,7 @@ namespace ArrayExtension.Tests
                 new int[] { 1, 2, 3, 4, 4 },
                 new int[] { 255, 20, 555 },
             };
-            int[][] sortedArray = array.SortBy(new LinesAscBySumComparer());
+            int[][] sortedArray = array.SortBy(new LinesAscBySumComparer()).ToArray();
             CollectionAssert.AreEqual(expectedArray, sortedArray);
         }
 
@@ -274,7 +259,7 @@ namespace ArrayExtension.Tests
                 new int[] { 1, 2, 3, 4, 4 },
                 new int[] { 255, 20, 555 }
             };
-            int[][] sortedArray = array.SortBy(new LinesAscByMaxElementComparer());
+            int[][] sortedArray = array.SortBy(new LinesAscByMaxElementComparer()).ToArray();
             CollectionAssert.AreEqual(expectedArray, sortedArray);
         }
 
@@ -299,7 +284,7 @@ namespace ArrayExtension.Tests
                 null,
                 null
             };
-            int[][] sortedArray = array.SortBy(new LinesDescByMaxElementComparer());
+            int[][] sortedArray = array.SortBy(new LinesDescByMaxElementComparer()).ToArray();
             CollectionAssert.AreEqual(expectedArray, sortedArray);
         }
 
@@ -346,7 +331,7 @@ namespace ArrayExtension.Tests
                 null,
                 null
             };
-            int[][] sortedArray = array.SortBy(new LinesDescByMinElementComparer());
+            int[][] sortedArray = array.SortBy(new LinesDescByMinElementComparer()).ToArray();
             CollectionAssert.AreEqual(expectedArray, sortedArray);
         }
 
