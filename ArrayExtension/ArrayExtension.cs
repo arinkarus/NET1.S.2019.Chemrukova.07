@@ -42,7 +42,7 @@ namespace ArrayExtension
         }
 
         /// <summary>
-        /// Transforms array of double numbers to source of dest.
+        /// Transforms values to other depending on given transformer.
         /// </summary>
         /// <typeparam name="TSource">Source type.</typeparam>
         /// <typeparam name="TDest">Destination type.</typeparam>
