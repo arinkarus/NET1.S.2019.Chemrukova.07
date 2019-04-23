@@ -27,7 +27,7 @@ namespace ArrayExtension
         {
             CheckOnNull(source);
             CheckOnNull(predicate);    
-            IEnumerable<T> GetFilteredItems(IEnumerable<T> items, IPredicate<T> givenPredicate)
+            IEnumerable<T> GetFilteredItems()
             {
                 foreach (var item in source)
                 {
@@ -38,7 +38,7 @@ namespace ArrayExtension
                 }
             }
 
-            return GetFilteredItems(source, predicate);
+            return GetFilteredItems();
         }
 
         /// <summary>
